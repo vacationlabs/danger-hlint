@@ -55,7 +55,7 @@ module Danger
           message = "### hlint found issues\n\n"
           message << markdown_issues(warnings, 'Suggestions') unless suggestions.empty?
           message << markdown_issues(warnings, 'Warnings') unless warnings.empty?
-          message << markdown_issues(errors, 'Errors') unless errors.empty?
+          # message << markdown_issues(errors, 'Errors') unless errors.empty?
           markdown message
         end
       end
