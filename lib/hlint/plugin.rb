@@ -39,10 +39,22 @@ module Danger
                .map { |lint_result| JSON.parse(lint_result).flatten }
                .flatten
 
+      puts "===> ISSUES"
+      puts issues.inspect
+      
       self.suggestions = issues.select { |issue| issue['severity'] == 'Suggestion' }
       self.warnings = issues.select { |issue| issue['severity'] == 'Warning' }
       self.errors = issues.select { |issue| issue['severity'] == 'Error' }
 
+      puts "===> SUGGESTIONS"
+      puts suggestions.inspect
+
+      puts "===> warnings"
+      puts warnings.inspect
+
+      puts "===> errors"
+      puts errors.inspect
+      
       if inline_mode
         # Reprt with inline comment
         send_inline_comment(suggestions, 'warn')
@@ -50,17 +62,21 @@ module Danger
         send_inline_comment(errors, 'fail')
 
       else
+        puts "===> not inline_mode"
         # Report if any suggestions, warnings or errors
         if suggestions.count > 0 || warnings.count > 0 || errors.count > 0
+          puts "===> generating message"
           message = "### hlint found issues\n\n"
           message << markdown_issues(warnings, 'Suggestions') unless suggestions.empty?
           message << markdown_issues(warnings, 'Warnings') unless warnings.empty?
           # message << markdown_issues(errors, 'Errors') unless errors.empty?
+          
+          puts "==> mardkdown called with #{markdown.inspect}"
           markdown message
         end
       end
     end
-
+  
     def markdown_issues(results, heading)
       message = "#### #{heading}\n\n"
 
